@@ -108,6 +108,35 @@ docker-compose up -d
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
 
+## 模型文件
+
+由于模型文件较大，未包含在代码仓库中。请按以下步骤获取模型：
+
+## 模型安装
+
+1. 安装依赖：
+
+```bash
+pip install huggingface_hub
+```
+
+2. 运行下载脚本：
+
+```bash
+python scripts/download_models.py
+```
+
+或者手动下载：
+
+1. 创建模型目录：
+
+```bash
+mkdir -p models
+```
+
+2. 从 HuggingFace 下载 [faster-whisper-base](https://huggingface.co/Systran/faster-whisper-base) 模型
+3. 将下载的文件放置在 models 目录下
+
 ## 贡献指南
 
 1. Fork 本仓库
@@ -124,24 +153,3 @@ docker-compose up -d
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1+-blue.svg)
 ![React](https://img.shields.io/badge/react-18.2.0+-blue.svg)
-
-## 模型文件
-
-由于模型文件较大，未包含在代码仓库中。请按以下步骤获取模型：
-
-1. 创建模型目录：
-
-```bash
-mkdir -p models
-```
-
-2. 下载模型文件：
-
-- 从 HuggingFace 下载 faster-whisper-base 模型
-- 将模型文件放置在 models 目录下
-
-或者运行以下命令自动下载：
-
-```bash
-python scripts/download_models.py
-```

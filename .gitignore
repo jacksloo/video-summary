@@ -124,5 +124,10 @@ summary/dist/
 summary/.env
 summary/.env.*
 !summary/.env.example
+
+# 添加模型相关忽略
 models/
 *.pt
+*.bin
+*.model
+*.onnx
