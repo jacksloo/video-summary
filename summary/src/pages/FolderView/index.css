@@ -1,0 +1,151 @@
+.folder-view {
+  padding: 24px;
+}
+
+.folder-list-item {
+  cursor: pointer;
+  padding: 8px 16px;
+  transition: background-color 0.3s;
+}
+
+.folder-list-item:hover {
+  background-color: #f5f5f5;
+}
+
+.folder-grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.folder-grid-item-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.folder-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 12px;
+  transition: background-color 0.3s;
+}
+
+.folder-grid-item:hover {
+  background-color: #f5f5f5;
+}
+
+.item-icon-wrapper {
+  width: 200px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.item-icon-wrapper.folder {
+  background-color: #e6f7ff;
+}
+
+.item-icon-wrapper.video {
+  background-color: #fff1f0;
+}
+
+.item-icon-wrapper .anticon {
+  font-size: 80px;
+  color: #1890ff;
+}
+
+.folder-grid-item-name {
+  margin-top: 8px;
+  text-align: center;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #262626;
+  font-size: 16px;
+}
+
+.folder-grid-item-info {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}
+
+.video-thumbnail {
+  width: 200px;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background-color: #fff1f0;
+}
+
+.folder-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.folder-breadcrumb .ant-breadcrumb {
+  line-height: 32px;
+}
+
+.breadcrumb-home,
+.breadcrumb-item {
+  color: #1890ff;
+  cursor: pointer;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-home:hover,
+.breadcrumb-item:hover {
+  color: #40a9ff;
+}
+
+.breadcrumb-home .anticon {
+  margin-right: 4px;
+  font-size: 16px;
+}
+
+.breadcrumb-home {
+  font-weight: 500;
+}
+
+/* 面包屑分隔符样式 */
+.ant-breadcrumb-separator {
+  margin: 0 8px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.grid-container {
+  height: calc(100vh - 200px);
+  overflow: auto;
+}
+
+.folder-grid-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.loading-more {
+  text-align: center;
+  padding: 16px;
+}
+
+.loading-text {
+  margin-top: 8px;
+  color: rgba(0, 0, 0, 0.45);
+}

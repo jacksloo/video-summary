@@ -1,0 +1,489 @@
+.folder-selector {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.folder-browser {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.folder-browser-header {
+  padding: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.folder-browser-content {
+  display: flex;
+  flex: 1;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.quick-access {
+  width: 200px;
+  padding: 8px;
+  border-right: 1px solid #f0f0f0;
+  overflow-y: auto;
+}
+
+.quick-access-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.quick-access-item:hover {
+  background-color: #f5f5f5;
+}
+
+.folder-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 16px;
+}
+
+.folder-browser-footer {
+  padding: 12px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selected-path {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  margin-right: 16px;
+}
+
+.folder-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.folder-item:hover {
+  background-color: #f5f5f5;
+}
+
+.ant-table-body {
+  overflow-y: auto !important;
+}
+
+.folder-browser-content .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 500;
+}
+
+.folder-browser-content .ant-table-tbody > tr > td {
+  padding: 8px 16px;
+}
+
+.folder-browser-content .ant-table-tbody > tr:hover > td {
+  background: #e6f7ff;
+}
+
+.quick-access-item.active {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.selected-path .ant-input {
+  background-color: #fafafa;
+  cursor: default;
+}
+
+/* 适配暗色主题 */
+[data-theme="dark"] .folder-browser {
+  background: #141414;
+}
+
+[data-theme="dark"] .quick-access {
+  border-right-color: #303030;
+}
+
+[data-theme="dark"] .quick-access-item:hover {
+  background-color: #1f1f1f;
+}
+
+[data-theme="dark"] .folder-browser-header,
+[data-theme="dark"] .folder-browser-footer {
+  border-color: #303030;
+}
+
+/* 添加选中行样式 */
+.folder-row-selected {
+  background-color: #e6f7ff;
+}
+
+.folder-row-selected:hover > td {
+  background-color: #bae7ff !important;
+}
+
+/* 优化表格样式 */
+.folder-list .ant-table-tbody > tr > td {
+  transition: all 0.3s;
+}
+
+/* 优化按钮样式 */
+.folder-browser-header .ant-btn {
+  padding: 4px 8px;
+  height: 32px;
+}
+
+/* 优化面包屑样式 */
+.ant-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* 添加滚动条样式 */
+.folder-list::-webkit-scrollbar,
+.quick-access::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.folder-list::-webkit-scrollbar-thumb,
+.quick-access::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 3px;
+}
+
+.folder-list::-webkit-scrollbar-track,
+.quick-access::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 3px;
+}
+
+/* 适配暗色主题的滚动条 */
+[data-theme="dark"] .folder-list::-webkit-scrollbar-thumb,
+[data-theme="dark"] .quick-access::-webkit-scrollbar-thumb {
+  background: #434343;
+}
+
+[data-theme="dark"] .folder-list::-webkit-scrollbar-track,
+[data-theme="dark"] .quick-access::-webkit-scrollbar-track {
+  background: #262626;
+}
+
+/* 添加加载状态样式 */
+.folder-list .ant-spin-nested-loading {
+  height: 100%;
+}
+
+.folder-list .ant-spin-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.folder-list .ant-table {
+  flex: 1;
+}
+
+/* 添加列表视图样式 */
+.folder-list-view {
+  height: 100%;
+  overflow-y: auto;
+  padding: 0 16px;
+}
+
+.folder-list-view .ant-list-item {
+  padding: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.folder-list-view .ant-list-item:hover {
+  background-color: #f5f5f5;
+}
+
+.folder-list-view .ant-list-item-meta-title {
+  margin-bottom: 4px;
+}
+
+.folder-list-view .ant-list-item-meta-description {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+}
+
+/* 标签页样式 */
+.folder-browser .ant-tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.folder-browser .ant-tabs-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.folder-browser .ant-tabs-tabpane {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 适配暗色主题 */
+[data-theme="dark"] .folder-list-view .ant-list-item:hover {
+  background-color: #1f1f1f;
+}
+
+[data-theme="dark"] .folder-list-view .ant-list-item-meta-description {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* 预览样式 */
+.folder-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.folder-info {
+  padding: 12px;
+  background-color: #fafafa;
+  border-radius: 4px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.preview-files {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.preview-files .ant-list-item {
+  padding: 8px 12px;
+}
+
+[data-theme="dark"] .folder-info {
+  background-color: #1f1f1f;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* 修改模态框的宽度和高度 */
+.folder-modal {
+  width: 90vw !important;
+  max-width: 1000px !important;
+}
+
+.folder-modal .ant-modal-content {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.folder-modal .ant-modal-body {
+  flex: 1;
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 文件夹浏览区域的滚动设置 */
+.folder-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  padding: 24px;
+  padding-bottom: 0;
+  gap: 24px;
+}
+
+/* 底部工具栏 */
+.folder-toolbar {
+  padding: 12px 24px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 文件列表区域调整 */
+.folder-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 16px;
+  min-width: 0; /* 防止内容溢出 */
+}
+
+/* 树形结构样式 */
+.folder-tree {
+  width: 240px;
+  border-right: 1px solid #f0f0f0;
+  padding-right: 16px;
+  overflow-y: auto;
+}
+
+/* 树节点图标样式 */
+.folder-tree .anticon {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+/* 树节点分隔线样式 */
+.folder-tree .ant-tree-node-content-wrapper[title=""] {
+  height: 1px;
+  padding: 0;
+  margin: 4px 0;
+  background-color: #f0f0f0;
+  pointer-events: none;
+}
+
+[data-theme="dark"] .folder-tree .ant-tree-node-content-wrapper[title=""] {
+  background-color: #303030;
+}
+
+/* 快速访问组样式 */
+.folder-tree .ant-tree-treenode-disabled {
+  color: rgba(0, 0, 0, 0.85);
+  cursor: default;
+}
+
+.folder-tree .ant-tree-treenode-disabled .ant-tree-node-content-wrapper {
+  cursor: default;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+/* 暗色主题适配 */
+[data-theme="dark"] .folder-tree .ant-tree-treenode-disabled {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="dark"]
+  .folder-tree
+  .ant-tree-treenode-disabled
+  .ant-tree-node-content-wrapper {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* 适配暗色主题 */
+[data-theme="dark"] .folder-tree {
+  border-right-color: #303030;
+}
+
+[data-theme="dark"] .folder-toolbar {
+  background: #1f1f1f;
+  border-top-color: #303030;
+}
+
+/* 树节点样式 */
+.folder-tree .ant-tree-node-content-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+}
+
+.folder-tree .ant-tree-node-content-wrapper:hover {
+  background-color: #f5f5f5;
+}
+
+.folder-tree .ant-tree-node-selected {
+  background-color: #e6f7ff !important;
+}
+
+[data-theme="dark"] .folder-tree .ant-tree-node-content-wrapper:hover {
+  background-color: #1f1f1f;
+}
+
+[data-theme="dark"] .folder-tree .ant-tree-node-selected {
+  background-color: #177ddc !important;
+}
+
+.breadcrumb-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fff;
+}
+
+[data-theme="dark"] .breadcrumb-container {
+  background: #1f1f1f;
+  border-color: #303030;
+}
+
+.selected-folder {
+  color: rgba(0, 0, 0, 0.85);
+  padding: 0 12px;
+}
+
+.folder-item {
+  cursor: pointer;
+  user-select: none;
+}
+
+.folder-item.active {
+  background-color: #e6f7ff;
+}
+
+.folder-name-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.folder-name-label {
+  color: rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+  min-width: 70px;
+}
+
+.folder-name-input .ant-input {
+  flex: 1;
+}
+
+.folder-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 16px 0;
+  gap: 16px;
+}
+
+.folder-item-content {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.folder-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.folder-item-name {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.folder-item-details {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  gap: 16px;
+}
+
+[data-theme="dark"] .folder-item-details {
+  color: rgba(255, 255, 255, 0.45);
+}

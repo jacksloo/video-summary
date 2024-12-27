@@ -1,0 +1,19 @@
+Looking in indexes: https://mirrors.aliyun.com/pypi/simple/
+Collecting python-jose[cryptography]
+  Downloading https://mirrors.aliyun.com/pypi/packages/bd/2d/e94b2f7bab6773c70efc70a61d66e312e1febccd9e0db6b9e0adf58cbad1/python_jose-3.3.0-py2.py3-none-any.whl (33 kB)
+Collecting ecdsa!=0.15 (from python-jose[cryptography])
+  Downloading https://mirrors.aliyun.com/pypi/packages/00/e7/ed3243b30d1bec41675b6394a1daae46349dc2b855cb83be846a5a918238/ecdsa-0.19.0-py2.py3-none-any.whl (149 kB)
+Collecting rsa (from python-jose[cryptography])
+  Downloading https://mirrors.aliyun.com/pypi/packages/49/97/fa78e3d2f65c02c8e1268b9aba606569fe97f6c8f7c2d74394553347c145/rsa-4.9-py3-none-any.whl (34 kB)
+Collecting pyasn1 (from python-jose[cryptography])
+  Downloading https://mirrors.aliyun.com/pypi/packages/c8/f1/d6a797abb14f6283c0ddff96bbdd46937f64122b8c925cab503dd37f8214/pyasn1-0.6.1-py3-none-any.whl (83 kB)
+Collecting cryptography>=3.4.0 (from python-jose[cryptography])
+  Downloading https://mirrors.aliyun.com/pypi/packages/97/9b/443270b9210f13f6ef240eff73fd32e02d381e7103969dc66ce8e89ee901/cryptography-44.0.0-cp39-abi3-win_amd64.whl (3.2 MB)
+     ---------------------------------------- 3.2/3.2 MB 27.0 MB/s eta 0:00:00
+Collecting cffi>=1.12 (from cryptography>=3.4.0->python-jose[cryptography])
+  Downloading https://mirrors.aliyun.com/pypi/packages/d1/b6/0b0f5ab93b0df4acc49cae758c81fe4e5ef26c3ae2e10cc69249dfd8b3ab/cffi-1.17.1-cp310-cp310-win_amd64.whl (181 kB)
+Requirement already satisfied: six>=1.9.0 in c:\softwares\anaconda3\envs\summary\lib\site-packages (from ecdsa!=0.15->python-jose[cryptography]) (1.17.0)
+Collecting pycparser (from cffi>=1.12->cryptography>=3.4.0->python-jose[cryptography])
+  Downloading https://mirrors.aliyun.com/pypi/packages/13/a3/a812df4e2dd5696d1f351d58b8fe16a405b234ad2886a0dab9183fb78109/pycparser-2.22-py3-none-any.whl (117 kB)
+Installing collected packages: pycparser, pyasn1, ecdsa, rsa, cffi, python-jose, cryptography
+Successfully installed cffi-1.17.1 cryptography-44.0.0 ecdsa-0.19.0 pyasn1-0.6.1 pycparser-2.22 python-jose-3.3.0 rsa-4.9

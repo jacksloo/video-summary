@@ -1,0 +1,163 @@
+/* 布局样式 */
+.home-layout {
+  min-height: 100vh;
+}
+
+/* Logo 容器样式 */
+.logo-container {
+  height: 64px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #002140;
+  overflow: hidden;
+}
+
+.logo-container svg {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.logo-container h1 {
+  margin: 0;
+  color: #fff;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 侧边栏样式 */
+.ant-layout-sider {
+  background: #001529;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+}
+
+.source-list {
+  border-right: 0;
+  padding: 8px 0;
+}
+
+.source-list .ant-menu-item {
+  height: 56px;
+  line-height: 56px;
+  margin: 4px 0;
+  font-size: 16px;
+}
+
+.source-list .ant-menu-item .anticon {
+  font-size: 20px;
+  margin-right: 12px;
+}
+
+/* 折叠按钮样式 */
+.trigger-button {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger-button:hover {
+  color: #1890ff;
+}
+
+/* 头部样式 */
+.site-layout-header {
+  background: #fff;
+  padding: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+}
+
+.header-content {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 内容区域样式 */
+.site-layout-content {
+  margin: 24px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 4px;
+  min-height: calc(100vh - 112px);
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.content-wrapper h2 {
+  margin-bottom: 16px;
+  color: #262626;
+}
+
+.content-wrapper p {
+  color: #595959;
+  font-size: 14px;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .ant-layout-sider {
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    z-index: 2;
+  }
+
+  .site-layout-content {
+    margin: 16px;
+    padding: 16px;
+  }
+
+  .logo-container h1 {
+    display: none;
+  }
+}
+
+/* 用户信息样式 */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.user-info:hover {
+  background-color: rgba(0, 0, 0, 0.025);
+}
+
+.username {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.ant-dropdown-menu-item .anticon {
+  font-size: 16px;
+}
+
+/* 调整头部右侧内容的样式 */
+.header-right {
+  padding-right: 24px;
+}

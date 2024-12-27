@@ -1,0 +1,51 @@
+.settings-layout {
+  position: relative;
+  height: 100%;
+}
+
+.settings-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 16px 24px;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-header h2 {
+  margin: 0;
+  flex: 1;
+}
+
+.settings-content {
+  padding: 0 24px;
+}
+
+.settings-anchor {
+  position: sticky;
+  top: 88px;
+  padding: 24px 0;
+}
+
+.settings-section {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.settings-section:last-child {
+  margin-bottom: 0;
+}
+
+.ant-form-item-label {
+  font-weight: 500;
+}
+
+/* 适配暗色主题 */
+[data-theme="dark"] .settings-header {
+  background: #141414;
+  border-bottom-color: #303030;
+}

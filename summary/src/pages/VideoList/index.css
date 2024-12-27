@@ -1,0 +1,126 @@
+.video-list {
+  padding: 24px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.toolbar-left {
+  display: flex;
+  gap: 8px;
+}
+
+.toolbar-right {
+  display: flex;
+  gap: 8px;
+}
+
+.ant-table-cell .ant-space {
+  gap: 8px;
+}
+
+.ant-table-row:hover .ant-btn-text {
+  opacity: 1;
+}
+
+.ant-table-cell .ant-btn-text {
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+/* 来源选择器样式 */
+.source-type-selector .ant-radio-group {
+  display: flex;
+  gap: 16px;
+}
+
+/* 调整来源选择器与弹窗标题的间距 */
+.source-type-selector {
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+.source-type-selector .ant-radio-button-wrapper {
+  display: block;
+  height: auto;
+  padding: 16px;
+  margin-bottom: 0;
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  flex: 1;
+}
+
+.source-type-selector .ant-radio-button-wrapper:not(:first-child)::before {
+  display: none;
+}
+
+.source-type-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.source-type-icon {
+  font-size: 32px;
+  color: #1890ff;
+}
+
+.source-type-info {
+  width: 100%;
+}
+
+.source-type-title {
+  font-weight: 500;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+
+.source-type-desc {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+}
+
+/* 响应式布局 */
+@media screen and (max-width: 768px) {
+  .source-type-selector .ant-radio-group {
+    flex-direction: column;
+  }
+
+  .source-type-selector .ant-radio-button-wrapper {
+    margin-bottom: 8px;
+  }
+
+  .source-type-option {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .source-type-icon {
+    font-size: 24px;
+  }
+}
+
+/* 上传区域样式 */
+.ant-upload-drag {
+  padding: 24px;
+}
+
+.ant-upload-drag-icon {
+  font-size: 48px;
+  color: #1890ff;
+}
+
+.ant-upload-text {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.ant-upload-hint {
+  color: rgba(0, 0, 0, 0.45);
+}

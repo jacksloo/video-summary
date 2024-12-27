@@ -1,0 +1,128 @@
+# Python
+__pycache__/
+*.py[cod]
+**/__pycache__/**
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+*.so
+app/**/__pycache__/
+app/**/*.pyc
+tests/**/__pycache__/
+tests/**/*.pyc
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# 配置文件
+**/config.py
+!app/core/config.py.example
+
+# 环境变量
+.env
+**/.env
+.env.*
+!.env.example
+
+# 虚拟环境
+venv/
+ENV/
+
+# 数据库
+*.sqlite3
+*.db
+*.sql
+*.psql
+postgres-data/
+migrations/
+alembic/versions/*.py
+!alembic/versions/2024_03_21_01_initial_schema.py
+
+# 日志
+*.log
+log/
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 前端
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.next/
+.nuxt/
+dist/
+.cache/
+public/uploads/
+**/node_modules/
+node_modules/
+summary/node_modules/
+coverage/
+build/
+.pnp
+.pnp.js
+*.tsbuildinfo
+next-env.d.ts
+
+# 临时文件
+*.tmp
+*.temp
+.cache/
+tmp/
+temp/
+
+# 系统文件
+Thumbs.db
+desktop.ini
+*.bak
+
+# 证书和密钥
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.priv
+*.pfx
+*.p12
+.ssh/
+
+# 项目特定
+app/static/uploads/
+app/media/
+summary/public/uploads/
+summary/build/
+summary/dist/
+summary/.env
+summary/.env.*
+!summary/.env.example
+models/
+*.pt
