@@ -18,7 +18,7 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI
-from app.services.transcription import TranscriptionService
+from app.services.transcription import TranscriptionService, transcribe_video_task
 from app.core.config import settings
 from app.schemas.transcription import (
     TranscriptionRequest,
@@ -632,7 +632,6 @@ async def transcribe_video(
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_user)
 ):
-    """开始视频转录任务"""
     try:
         # 获取视频来源
         source = db.query(models.VideoSource).filter(
@@ -655,32 +654,56 @@ async def transcribe_video(
         if not video_path.exists():
             raise HTTPException(status_code=404, detail="视频文件不存在")
 
-        # 创建转录任务
-        task = TranscriptionTask(
+        # 如果是强制重新转录，删除所有相关的旧记录
+        if request.force:
+            # 删除旧的转录任务
+            db.query(models.TranscriptionTask).filter(
+                models.TranscriptionTask.video_path == request.relativePath,
+                models.TranscriptionTask.user_id == current_user.id
+            ).delete()
+            
+            # 删除旧的转录记录
+            db.query(models.VideoTranscript).filter(
+                models.VideoTranscript.source_id == source.id,
+                models.VideoTranscript.video_path == request.relativePath
+            ).delete()
+            
+            db.commit()
+        else:
+            # 检查是否已存在转录任务
+            existing_task = db.query(models.TranscriptionTask).filter(
+                models.TranscriptionTask.video_path == request.relativePath,
+                models.TranscriptionTask.user_id == current_user.id
+            ).first()
+
+            if existing_task:
+                return {"taskId": existing_task.id}
+
+        # 创建新的转录任务
+        task = models.TranscriptionTask(
             user_id=current_user.id,
+            source_id=source.id,
             status="pending",
             progress=0,
-            video_path=request.relativePath,  # 保存相对路径
-            language=request.language or "zh"  # 使用请求中的语言或默认值
+            video_path=request.relativePath,
+            language=request.language or "zh",
+            model=request.model  # 保存选择的模型
         )
         db.add(task)
         db.commit()
         db.refresh(task)
 
-        # 在后台启动转录任务
+        # 启动后台转录任务
         background_tasks.add_task(
-            transcription_service.process_video,
+            transcribe_video_task,
             task.id,
-            str(video_path),  # 传递完整路径
-            source.id,
+            str(video_path),
+            request.language,
+            request.model,  # 传递模型参数
             db
         )
 
-        return TranscriptionResponse(
-            taskId=task.id,
-            status="processing",
-            message="转录任务已开始"
-        )
+        return {"taskId": task.id}
 
     except Exception as e:
         logger.error(f"Error starting transcription: {str(e)}")

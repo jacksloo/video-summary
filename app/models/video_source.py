@@ -3,6 +3,7 @@ import json
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
+from sqlalchemy.sql import func
 from app.db.base_class import Base
 
 class SourceType(str, enum.Enum):
@@ -24,16 +25,19 @@ class VideoSource(Base):
 
     user = relationship("User", back_populates="video_sources")
     transcripts = relationship("VideoTranscript", back_populates="source")
+    transcription_tasks = relationship("TranscriptionTask", back_populates="source")
 
 class VideoTranscript(Base):
     __tablename__ = "video_transcripts"
 
     id = Column(Integer, primary_key=True, index=True)
-    source_id = Column(Integer, ForeignKey("video_sources.id"), nullable=False)
+    source_id = Column(Integer, ForeignKey("video_sources.id"))
     video_path = Column(String, nullable=False)
-    text = Column(Text)
-    segments = Column(JSON)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    title = Column(String, nullable=True)
+    text = Column(Text, nullable=True)
+    segments = Column(JSON, nullable=True)
+    labels = Column(JSON, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     source = relationship("VideoSource", back_populates="transcripts") 

@@ -1,21 +1,25 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, JSON
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, JSON
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-from datetime import datetime
 from app.db.base_class import Base
 
 class TranscriptionTask(Base):
     __tablename__ = "transcription_tasks"
 
     id = Column(Integer, primary_key=True, index=True)
-    video_path = Column(String, nullable=False)  # 存储相对路径
     user_id = Column(Integer, ForeignKey("users.id"))
-    status = Column(String, default="pending")  # pending, processing, success, error
+    source_id = Column(Integer, ForeignKey("video_sources.id"))
+    video_path = Column(String, nullable=False)
+    status = Column(String, nullable=True)  # pending, processing, success, error
     text = Column(Text, nullable=True)
     segments = Column(JSON, nullable=True)
     error = Column(String, nullable=True)
-    progress = Column(Integer, default=0)
-    language = Column(String, default="zh")  # 添加语言字段
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    progress = Column(Integer, nullable=True)
+    language = Column(String, nullable=True)
+    model = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    user = relationship("User", back_populates="transcription_tasks") 
+    # 添加关系
+    user = relationship("User", back_populates="transcription_tasks")
+    source = relationship("VideoSource", back_populates="transcription_tasks") 

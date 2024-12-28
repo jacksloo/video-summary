@@ -52,6 +52,8 @@ const VideoPlayer = () => {
   const [showSubtitle, setShowSubtitle] = useState(true);
   const [transcriptLanguage, setTranscriptLanguage] = useState("zh");
   const [transcriptView, setTranscriptView] = useState("segments"); // 'segments' 或 'full'
+  const [modal, contextHolder] = Modal.useModal();
+  const [selectedModel, setSelectedModel] = useState("distil-large-v3");
 
   // 获取相对路径
   const getRelativePath = (fullPath, sourcePath) => {
@@ -176,25 +178,40 @@ const VideoPlayer = () => {
   };
 
   // 开始转录任务
-  const startTranscription = async () => {
+  const startTranscription = () => {
     console.log("开始转录，当前状态:", transcriptStatus);
 
-    // 确保在状态为 success 时弹出确认框
+    // 如果已有转录文本（无论来源），弹出确认框
     if (
-      transcriptStatus.status === "success" &&
-      transcriptStatus.segments?.length > 0
+      transcriptStatus.status === "success" ||
+      (transcriptStatus.segments && transcriptStatus.segments.length > 0)
     ) {
-      Modal.confirm({
+      console.log("显示确认框，当前转录状态:", transcriptStatus);
+      modal.confirm({
         title: "重新转录确认",
         content: "已存在转录文稿，是否要重新获取？",
         okText: "确定",
         cancelText: "取消",
         onOk: async () => {
+          console.log("用户确认重新��录");
+          // 用户点击确定后，重置状态并开始新的转录
+          setTranscriptStatus({
+            taskId: null,
+            status: "idle",
+            text: null,
+            segments: [],
+            error: null,
+            progress: 0,
+          });
           await startTranscriptionProcess();
+        },
+        onCancel: () => {
+          console.log("用户取消重新转录");
         },
       });
     } else {
-      await startTranscriptionProcess();
+      console.log("直接开始转录");
+      startTranscriptionProcess();
     }
   };
 
@@ -206,21 +223,16 @@ const VideoPlayer = () => {
       setElapsedTime(0);
       setPollingCount(0);
 
-      // 重置转录状态
-      setTranscriptStatus({
-        taskId: null,
-        status: "idle",
-        text: null,
-        segments: [],
-        error: null,
-        progress: 0,
-      });
-
+      // 获取相对路径
       const relativePath = getRelativePath(videoPath, sourcePath);
+
+      // 发送转录请求
       const response = await request.post("/api/videos/transcribe", {
         sourceId: sourceId,
         relativePath: relativePath,
         language: transcriptLanguage,
+        force: true,
+        model: selectedModel,
       });
 
       if (response.data.taskId) {
@@ -235,6 +247,7 @@ const VideoPlayer = () => {
         pollTranscriptionStatus(response.data.taskId);
       }
     } catch (error) {
+      console.error("转录失败:", error);
       message.error(
         "开始转录失败：" + (error.response?.data?.detail || "未知错误")
       );
@@ -337,13 +350,30 @@ const VideoPlayer = () => {
             unCheckedChildren="隐藏字幕"
           />
           <Select
-            defaultValue="base"
-            style={{ width: 120, marginRight: 8 }}
+            value={selectedModel}
+            onChange={setSelectedModel}
+            style={{ width: 180, marginRight: 8 }}
             options={[
-              { value: "base", label: "Base 模型" },
-              { value: "turbo", label: "Turbo 模型" },
-              { value: "large-v3", label: "Large-v3 模型" },
-              { value: "distil-large-v3", label: "Distil-large-v3 模型" },
+              {
+                value: "base",
+                label: "Base (标准)",
+                title: "标准模型，性能和速度均衡",
+              },
+              {
+                value: "distil-large-v3",
+                label: "Distil-Large-v3 (推荐)",
+                title: "专为 faster-whisper 优化的模型，性能和速度平衡",
+              },
+              {
+                value: "large-v3",
+                label: "Large-v3 (高精度)",
+                title: "最新的标准模型，准确度最高但速度较慢",
+              },
+              {
+                value: "turbo",
+                label: "Turbo (快速)",
+                title: "速度最快的模型，适合实时转录",
+              },
             ]}
           />
           <Select
@@ -355,7 +385,7 @@ const VideoPlayer = () => {
               { value: "en", label: "英文" },
               { value: "ja", label: "日文" },
               { value: "ko", label: "韩文" },
-              { value: "auto", label: "自动检测" },
+              { value: "auto", label: "自���检测" },
             ]}
           />
         </div>
@@ -519,7 +549,6 @@ const VideoPlayer = () => {
       if (!sourceId || !videoPath || !sourcePath) return;
 
       try {
-        // 获取相对路径并进行编码
         const relativePath = getRelativePath(videoPath, sourcePath);
         const encodedPath = encodeURIComponent(
           relativePath.replace(/\\/g, "/")
@@ -533,7 +562,10 @@ const VideoPlayer = () => {
 
         console.log("检查已有转录结果:", response.data);
 
-        if (response.data) {
+        if (
+          response.data &&
+          (response.data.text || response.data.segments?.length > 0)
+        ) {
           setTranscriptStatus({
             taskId: null,
             status: "success",
@@ -554,7 +586,6 @@ const VideoPlayer = () => {
         }
       } catch (error) {
         console.error("检查转录记录失败:", error);
-        // 错误时也重置状态
         setTranscriptStatus({
           taskId: null,
           status: "idle",
@@ -601,6 +632,7 @@ const VideoPlayer = () => {
         style={{ background: "#fff" }}
         bordered={false}
       >
+        {contextHolder}
         <div className="video-content">
           <div className="video-main">
             {videoPath ? (
@@ -647,11 +679,6 @@ const VideoPlayer = () => {
               onChange={setActiveTab}
               items={[
                 {
-                  key: "transcript",
-                  label: "转录文本",
-                  children: renderTranscriptContent(),
-                },
-                {
                   key: "related",
                   label: "相关视频",
                   children: (
@@ -678,6 +705,11 @@ const VideoPlayer = () => {
                       )}
                     />
                   ),
+                },
+                {
+                  key: "transcript",
+                  label: "转录文本",
+                  children: renderTranscriptContent(),
                 },
               ]}
             />

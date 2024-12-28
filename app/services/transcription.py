@@ -11,6 +11,7 @@ import warnings
 import time
 from app.models.transcription import TranscriptionTask
 from app.models.video_source import VideoTranscript
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -122,3 +123,103 @@ class TranscriptionService:
                 logger.debug(f"Updated progress for task {task_id}: {task.progress}%")
         except Exception as e:
             logger.error(f"Error updating progress for task {task_id}: {str(e)}") 
+
+def transcribe_video_task(
+    task_id: int,
+    video_path: str,
+    language: Optional[str] = None,
+    model_name: str = "base",
+    db: Session = None
+) -> None:
+    """
+    处理视频转录任务
+    
+    Args:
+        task_id: 任务ID
+        video_path: 视频文件路径
+        language: 转录语言，默认为None（自动检测）
+        model_name: 模型名称，默认为"base"
+        db: 数据库会话
+    """
+    try:
+        print("开始转录：", language, model_name)
+        # 获取任务
+        task = db.query(TranscriptionTask).filter(
+            TranscriptionTask.id == task_id
+        ).first()
+        
+        if not task:
+            logger.error(f"Task {task_id} not found")
+            return
+
+        # 更新任务状态
+        task.status = "processing"
+        task.progress = 0
+        db.commit()
+
+        # 选择设备
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        compute_type = "float16" if device == "cuda" else "int8"
+
+        # 初始化模型
+        model = WhisperModel(
+            model_name,
+            device=device,
+            compute_type=compute_type,
+            download_root="./models"
+        )
+
+        # 转录音频
+        segments, info = model.transcribe(
+            video_path,
+            language=language,
+            task="transcribe",
+            beam_size=5,
+            vad_filter=True
+        )
+
+        # 处理转录结果
+        text_segments = []
+        full_text = []
+        
+        for segment in segments:
+            text_segments.append({
+                "start": segment.start,
+                "end": segment.end,
+                "text": segment.text
+            })
+            full_text.append(segment.text)
+
+        # 更新任务状态
+        task.status = "success"
+        task.progress = 100
+        task.text = "\n".join(full_text)
+        task.segments = text_segments
+        task.language = info.language
+        db.commit()
+
+        # 获取文件名（不带扩展名）
+        title = Path(task.video_path).stem
+
+        # 创建与 segments 等长的标签列表
+        labels = [0] * len(text_segments)
+
+        # 保存到转录记录表
+        transcript = VideoTranscript(
+            source_id=task.source_id,
+            video_path=task.video_path,
+            title=title,  # 添加标题
+            text=task.text,
+            segments=task.segments,
+            labels=labels  # 添加标签列表
+        )
+        db.add(transcript)
+        db.commit()
+
+    except Exception as e:
+        logger.error(f"Transcription error: {str(e)}")
+        if task:
+            task.status = "error"
+            task.error = str(e)
+            db.commit()
+        raise 

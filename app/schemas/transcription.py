@@ -1,25 +1,40 @@
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel
-from typing import Optional, List, Union
+from datetime import datetime
+
+class TranscriptionSegment(BaseModel):
+    """转录片段模型"""
+    start: float
+    end: float
+    text: str
 
 class TranscriptionRequest(BaseModel):
     sourceId: int
     relativePath: str
-    language: str = "zh"  # 默认中文，可选值：zh, en, ja, ko 等
+    language: Optional[str] = None
+    force: Optional[bool] = False
+    model: Optional[str] = "base"
 
 class TranscriptionResponse(BaseModel):
     taskId: int
-    status: str = "processing"
-    message: Optional[str] = None
-
-class TranscriptionSegment(BaseModel):
-    start: float
-    end: float
-    text: str
 
 class TranscriptionStatus(BaseModel):
     taskId: int
     status: str
     text: Optional[str] = None
-    segments: List[TranscriptionSegment] = []
+    segments: Optional[List[Dict[str, Any]]] = []
     error: Optional[str] = None
-    progress: int = 0 
+    progress: Optional[int] = 0
+
+class TranscriptionResult(BaseModel):
+    """转录结果模型"""
+    id: int
+    source_id: int
+    video_path: str
+    text: Optional[str]
+    segments: Optional[List[TranscriptionSegment]]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
+
+    class Config:
+        orm_mode = True 
