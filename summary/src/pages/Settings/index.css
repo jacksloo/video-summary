@@ -1,51 +1,33 @@
-.settings-layout {
-  position: relative;
-  height: 100%;
+.settingsCard {
+  margin: 24px;
 }
 
-.settings-header {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  padding: 16px 24px;
+.settingsCard :global(.ant-card-body) {
+  padding: 0;
+}
+
+.settingsLayout {
   background: #fff;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  min-height: 600px;
 }
 
-.settings-header h2 {
-  margin: 0;
-  flex: 1;
+.settingsSider {
+  background: #fff;
+  border-right: 1px solid #f0f0f0;
 }
 
-.settings-content {
-  padding: 0 24px;
+.settingsContent {
+  padding: 24px;
+  background: #fff;
 }
 
-.settings-anchor {
-  position: sticky;
-  top: 88px;
-  padding: 24px 0;
+/* 深色主题适配 */
+:global(.dark-theme) .settingsLayout,
+:global(.dark-theme) .settingsSider,
+:global(.dark-theme) .settingsContent {
+  background: var(--bg-color);
 }
 
-.settings-section {
-  margin-bottom: 24px;
-  border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.settings-section:last-child {
-  margin-bottom: 0;
-}
-
-.ant-form-item-label {
-  font-weight: 500;
-}
-
-/* 适配暗色主题 */
-[data-theme="dark"] .settings-header {
-  background: #141414;
-  border-bottom-color: #303030;
+:global(.dark-theme) .settingsSider {
+  border-right-color: var(--border-color);
 }

@@ -7,7 +7,7 @@ import {
   HomeOutlined,
   SettingOutlined,
   FileTextOutlined,
-  TeamOutlined,
+  BookOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import Logo from "../../assets/logo";
@@ -37,9 +37,9 @@ const MainLayout = () => {
       label: "文档管理",
     },
     {
-      key: "team",
-      icon: <TeamOutlined />,
-      label: "团队协作",
+      key: "dictionary",
+      icon: <BookOutlined />,
+      label: "数据字典",
     },
     {
       key: "settings",

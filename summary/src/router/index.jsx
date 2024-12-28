@@ -4,7 +4,9 @@ import VideoList from "../pages/VideoList";
 import VideoFolder from "../pages/VideoFolder";
 import VideoPlayer from "../pages/VideoPlayer";
 import Settings from "../pages/Settings";
+import Documents from "../pages/Documents";
 import PrivateRoute from "../components/PrivateRoute";
+import Dictionary from "../pages/Dictionary";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +36,14 @@ export const router = createBrowserRouter([
       {
         path: "settings",
         element: <Settings />,
+      },
+      {
+        path: "documents",
+        element: <Documents />,
+      },
+      {
+        path: "dictionary",
+        element: <Dictionary />,
       },
     ],
   },

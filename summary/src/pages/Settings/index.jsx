@@ -23,7 +23,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import request from "../../utils/request";
-import styles from "./index.module.css";
+import styles from "./index.css";
 
 const { Option } = Select;
 const { Sider, Content } = Layout;

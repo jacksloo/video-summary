@@ -1,0 +1,17 @@
+.container {
+  padding: 24px;
+}
+
+.container :global(.ant-card) {
+  margin-bottom: 24px;
+}
+
+.container :global(.ant-table-cell) {
+  vertical-align: top;
+}
+
+/* 深色主题适配 */
+:global(.dark-theme) .container :global(.ant-card) {
+  background: var(--bg-color);
+  border-color: var(--border-color);
+}

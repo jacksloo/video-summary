@@ -12,6 +12,8 @@ import FolderView from "./pages/FolderView";
 import VideoPlayer from "./pages/VideoPlayer";
 import MainLayout from "./layouts/MainLayout";
 import Settings from "./pages/Settings";
+import Documents from "./pages/Documents";
+import Dictionary from "./pages/Dictionary";
 import "./styles/theme.css";
 
 // 验证是否已登录的函数
@@ -52,6 +54,8 @@ function App() {
           <Route path="videos/folder/:sourceId" element={<FolderView />} />
           <Route path="/videos/play" element={<VideoPlayer />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="documents" element={<Documents />} />
+          <Route path="dictionary" element={<Dictionary />} />
         </Route>
       </Routes>
     </Router>

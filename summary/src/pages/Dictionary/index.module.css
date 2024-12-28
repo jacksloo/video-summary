@@ -1,0 +1,36 @@
+.container {
+  padding: 24px;
+}
+
+.layout {
+  display: flex;
+  min-height: 600px;
+}
+
+.sider {
+  width: 200px;
+  padding: 16px;
+  background: #fff;
+  border-right: 1px solid #f0f0f0;
+}
+
+.divider {
+  height: auto;
+}
+
+.content {
+  flex: 1;
+  padding: 16px;
+  background: #fff;
+}
+
+.toolbar {
+  margin-bottom: 16px;
+}
+
+/* 深色主题适配 */
+:global(.dark-theme) .sider,
+:global(.dark-theme) .content {
+  background: var(--bg-color);
+  border-color: var(--border-color);
+}
