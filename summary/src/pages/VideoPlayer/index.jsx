@@ -324,45 +324,74 @@ const VideoPlayer = () => {
     return `${pad(minutes)}:${pad(remainingSeconds)}`;
   };
 
-  // 渲染转录控制面板
+  // 渲染转录控制
   const renderTranscriptControls = () => {
     return (
-      <div className="transcript-header">
-        <div className="transcript-controls">
-          <div className="transcript-actions">
-            <Button
-              type="primary"
-              onClick={startTranscription}
-              loading={transcriptLoading}
-              icon={<FileTextOutlined />}
-            >
-              {transcriptStatus.status === "success" ? "重新转录" : "开始转录"}
-            </Button>
-            <Switch
-              checked={showSubtitle}
-              onChange={setShowSubtitle}
-              checkedChildren="显示字幕"
-              unCheckedChildren="隐藏字幕"
-            />
-          </div>
-
-          <div className="transcript-settings">
-            <Select
-              value={transcriptLanguage}
-              onChange={setTranscriptLanguage}
-              style={{ width: 120 }}
-              options={[
-                { value: "zh", label: "中文" },
-                { value: "en", label: "英文" },
-                { value: "ja", label: "日文" },
-                { value: "ko", label: "韩文" },
-                { value: "auto", label: "自动检测" },
-              ]}
-            />
-          </div>
+      <div className="transcript-controls">
+        {/* 模型和语言选择 */}
+        <div className="transcript-settings">
+          <Switch
+            checked={showSubtitle}
+            onChange={setShowSubtitle}
+            checkedChildren="显示字幕"
+            unCheckedChildren="隐藏字幕"
+          />
+          <Select
+            defaultValue="base"
+            style={{ width: 120, marginRight: 8 }}
+            options={[
+              { value: "base", label: "Base 模型" },
+              { value: "turbo", label: "Turbo 模型" },
+              { value: "large-v3", label: "Large-v3 模型" },
+              { value: "distil-large-v3", label: "Distil-large-v3 模型" },
+            ]}
+          />
+          <Select
+            value={transcriptLanguage}
+            onChange={setTranscriptLanguage}
+            style={{ width: 120 }}
+            options={[
+              { value: "zh", label: "中文" },
+              { value: "en", label: "英文" },
+              { value: "ja", label: "日文" },
+              { value: "ko", label: "韩文" },
+              { value: "auto", label: "自动检测" },
+            ]}
+          />
         </div>
 
-        <div className="transcript-view-switch">
+        {/* 转录进度和时间 */}
+        {transcriptStatus.status === "processing" && (
+          <div className="transcript-progress">
+            <Progress
+              type="circle"
+              percent={transcriptStatus.progress}
+              size={60}
+            />
+            <span className="elapsed-time">
+              已用时间: {formatElapsedTime(elapsedTime)}
+            </span>
+          </div>
+        )}
+
+        {/* 转录按钮 */}
+        <Button
+          type="primary"
+          onClick={startTranscription}
+          loading={transcriptLoading}
+          className="transcript-button"
+          style={{
+            backgroundColor: "#db7026",
+            borderColor: "#db7026",
+            fontWeight: "bold",
+          }}
+          block
+        >
+          {transcriptStatus.status === "success" ? "重新转录" : "开始转录"}
+        </Button>
+
+        {/* 字幕和视图控制 */}
+        <div className="view-controls">
           <Radio.Group
             value={transcriptView}
             onChange={(e) => setTranscriptView(e.target.value)}
@@ -459,7 +488,7 @@ const VideoPlayer = () => {
     [navigate, sourceId, sourcePath]
   );
 
-  // 在组件加载时检���是否有未完成的转录任务
+  // 在组件加载时检查是否有未完成的转录任务
   useEffect(() => {
     const checkTranscriptionStatus = async () => {
       if (transcriptStatus.taskId) {
