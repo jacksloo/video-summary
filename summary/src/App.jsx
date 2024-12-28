@@ -11,6 +11,8 @@ import VideoList from "./pages/VideoList";
 import FolderView from "./pages/FolderView";
 import VideoPlayer from "./pages/VideoPlayer";
 import MainLayout from "./layouts/MainLayout";
+import Settings from "./pages/Settings";
+import "./styles/theme.css";
 
 // 验证是否已登录的函数
 const isAuthenticated = () => {
@@ -26,6 +28,12 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  // 从本地存储或默认值初始化主题
+  React.useEffect(() => {
+    const theme = localStorage.getItem("theme") || "light";
+    document.body.className = `${theme}-theme`;
+  }, []);
+
   return (
     <Router>
       <Routes>
@@ -43,6 +51,7 @@ function App() {
           <Route path="videos" element={<VideoList />} />
           <Route path="videos/folder/:sourceId" element={<FolderView />} />
           <Route path="/videos/play" element={<VideoPlayer />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </Router>

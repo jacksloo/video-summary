@@ -19,6 +19,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import request from "../../utils/request";
 import "./index.css";
 import axios from "axios";
+import VideoSummary from "../../components/VideoSummary";
 
 const VideoPlayer = () => {
   const location = useLocation();
@@ -49,7 +50,7 @@ const VideoPlayer = () => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const elapsedTimeRef = useRef(null);
   const [currentSubtitle, setCurrentSubtitle] = useState("");
-  const [showSubtitle, setShowSubtitle] = useState(true);
+  const [showSubtitle, setShowSubtitle] = useState(false);
   const [transcriptLanguage, setTranscriptLanguage] = useState("zh");
   const [transcriptView, setTranscriptView] = useState("segments"); // 'segments' 或 'full'
   const [modal, contextHolder] = Modal.useModal();
@@ -193,7 +194,7 @@ const VideoPlayer = () => {
         okText: "确定",
         cancelText: "取消",
         onOk: async () => {
-          console.log("用户确认重新��录");
+          console.log("用户确认重新转录");
           // 用户点击确定后，重置状态并开始新的转录
           setTranscriptStatus({
             taskId: null,
@@ -385,7 +386,7 @@ const VideoPlayer = () => {
               { value: "en", label: "英文" },
               { value: "ja", label: "日文" },
               { value: "ko", label: "韩文" },
-              { value: "auto", label: "自���检测" },
+              { value: "auto", label: "自动检测" },
             ]}
           />
         </div>
@@ -545,60 +546,30 @@ const VideoPlayer = () => {
 
   // 检查是否有已存在的转录结果
   useEffect(() => {
-    const checkExistingTranscript = async () => {
-      if (!sourceId || !videoPath || !sourcePath) return;
-
+    const checkTranscript = async () => {
       try {
-        const relativePath = getRelativePath(videoPath, sourcePath);
-        const encodedPath = encodeURIComponent(
-          relativePath.replace(/\\/g, "/")
-        );
-
-        console.log("检查转录记录路径:", encodedPath);
-
         const response = await request.get(
-          `/api/videos/transcript/exists/${sourceId}/${encodedPath}`
+          `/api/videos/transcript/exists/${sourceId}/${encodeURIComponent(
+            videoPath
+          )}`
         );
-
-        console.log("检查已有转录结果:", response.data);
-
-        if (
-          response.data &&
-          (response.data.text || response.data.segments?.length > 0)
-        ) {
+        if (response.data) {
           setTranscriptStatus({
             taskId: null,
             status: "success",
-            text: response.data.text || "",
-            segments: response.data.segments || [],
-            error: null,
+            text: response.data.text,
+            segments: response.data.segments,
             progress: 100,
-          });
-        } else {
-          setTranscriptStatus({
-            taskId: null,
-            status: "idle",
-            text: null,
-            segments: [],
-            error: null,
-            progress: 0,
+            transcriptId: response.data.id,
           });
         }
       } catch (error) {
         console.error("检查转录记录失败:", error);
-        setTranscriptStatus({
-          taskId: null,
-          status: "idle",
-          text: null,
-          segments: [],
-          error: null,
-          progress: 0,
-        });
       }
     };
 
-    checkExistingTranscript();
-  }, [sourceId, videoPath, sourcePath]);
+    checkTranscript();
+  }, [sourceId, videoPath]);
 
   // 更新当前字幕
   useEffect(() => {
@@ -710,6 +681,16 @@ const VideoPlayer = () => {
                   key: "transcript",
                   label: "转录文本",
                   children: renderTranscriptContent(),
+                },
+                {
+                  key: "summary",
+                  label: "视频摘要",
+                  children: (
+                    <VideoSummary
+                      transcriptId={transcriptStatus.transcriptId}
+                      transcriptText={transcriptStatus.text}
+                    />
+                  ),
                 },
               ]}
             />

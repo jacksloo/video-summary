@@ -63,7 +63,7 @@ cp .env.example .env
 alembic upgrade head
 ```
 
-5. 运行 �� 发服务器：
+5. 运行开发服务器：
 
 ```bash
 uvicorn app.main:app --reload

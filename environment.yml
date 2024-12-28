@@ -18,6 +18,8 @@ dependencies:
   - torchvision
   - opencv
   - transformers
+  - sentencepiece
+  - pillow=8.0.0
   - pip
   - pip:
       - "fastapi[all]"
@@ -25,3 +27,4 @@ dependencies:
       - "pydantic[email]"
       - "python-multipart"
       - "faster-whisper>=0.10.0"
+      - "protobuf>=3.20.0"

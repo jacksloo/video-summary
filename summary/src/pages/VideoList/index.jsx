@@ -184,7 +184,7 @@ const VideoList = () => {
               rules={[{ required: true, message: "请选择云存储服务" }]}
             >
               <Select>
-                <Option value="oss">阿里云 OSS</Option>
+                <Option value="oss">阿��云 OSS</Option>
                 <Option value="cos">腾讯云 COS</Option>
                 <Option value="obs">华为云 OBS</Option>
               </Select>
@@ -284,14 +284,14 @@ const VideoList = () => {
 
   // 进入文件夹
   const handleEnterFolder = (record) => {
-    if (record.type === "LOCAL") {
-      navigate(`/videos/folder/${record.id}`, {
-        state: {
-          path: record.path,
-          name: record.name,
-        },
-      });
-    }
+    console.log("进入文件夹：", record);
+    navigate(`/videos/folder/${record.id}`, {
+      state: {
+        sourceId: record.id,
+        path: record.path,
+        name: record.name,
+      },
+    });
   };
 
   // 表格列定义
@@ -369,11 +369,7 @@ const VideoList = () => {
           loading={loading}
           rowSelection={rowSelection}
           onRow={(record) => ({
-            onDoubleClick: () => {
-              if (record.type === "LOCAL") {
-                handleEnterFolder(record);
-              }
-            },
+            onDoubleClick: () => handleEnterFolder(record),
             style: {
               cursor: record.type === "LOCAL" ? "pointer" : "default",
             },

@@ -766,7 +766,8 @@ async def check_transcript_exists(
                 "status": "success",
                 "text": transcript.text,
                 "segments": transcript.segments,
-                "progress": 100
+                "progress": 100,
+                "id": transcript.id
             }
         return None
         

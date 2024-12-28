@@ -1,28 +1,19 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, JSON, Text
-import json
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, JSON, Text
 from sqlalchemy.orm import relationship
-from datetime import datetime
-import enum
-from sqlalchemy.sql import func
 from app.db.base_class import Base
-
-class SourceType(str, enum.Enum):
-    LOCAL = "LOCAL"      # 本地文件夹
-    CLOUD = "CLOUD"      # 云存储
-    URL = "URL"         # 网络链接
+from datetime import datetime
 
 class VideoSource(Base):
     __tablename__ = "video_sources"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(100), nullable=False)  # 来源名称/标签
-    type = Column(Enum(SourceType), nullable=False)  # 来源类型
-    path = Column(String(500), nullable=False)  # 文件夹路径或云存储路径
-    config = Column(String(1000), nullable=True, default='{}')  # 额外配置（如云存储凭证）
+    name = Column(String, index=True)
+    path = Column(String, unique=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # 关联关系
     user = relationship("User", back_populates="video_sources")
     transcripts = relationship("VideoTranscript", back_populates="source")
     transcription_tasks = relationship("TranscriptionTask", back_populates="source")
@@ -32,12 +23,13 @@ class VideoTranscript(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     source_id = Column(Integer, ForeignKey("video_sources.id"))
-    video_path = Column(String, nullable=False)
-    title = Column(String, nullable=True)
-    text = Column(Text, nullable=True)
-    segments = Column(JSON, nullable=True)
-    labels = Column(JSON, nullable=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    video_path = Column(String, index=True)
+    text = Column(Text)
+    segments = Column(JSON)
+    language = Column(String(10))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    source = relationship("VideoSource", back_populates="transcripts") 
+    # 关联关系
+    source = relationship("VideoSource", back_populates="transcripts")
+    summaries = relationship("VideoSummary", back_populates="transcript") 

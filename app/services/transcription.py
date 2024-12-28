@@ -124,6 +124,12 @@ class TranscriptionService:
         except Exception as e:
             logger.error(f"Error updating progress for task {task_id}: {str(e)}") 
 
+    def get_transcript(self, transcript_id: int, db: Session) -> Optional[VideoTranscript]:
+        """获取转录记录"""
+        return db.query(VideoTranscript).filter(
+            VideoTranscript.id == transcript_id
+        ).first()
+
 def transcribe_video_task(
     task_id: int,
     video_path: str,

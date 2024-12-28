@@ -22,27 +22,27 @@ const MainLayout = () => {
 
   const menuItems = [
     {
-      key: "/home",
+      key: "home",
       icon: <HomeOutlined />,
       label: "首页",
     },
     {
-      key: "/videos",
+      key: "videos",
       icon: <VideoCameraOutlined />,
       label: "视频管理",
     },
     {
-      key: "/documents",
+      key: "documents",
       icon: <FileTextOutlined />,
       label: "文档管理",
     },
     {
-      key: "/team",
+      key: "team",
       icon: <TeamOutlined />,
       label: "团队协作",
     },
     {
-      key: "/settings",
+      key: "settings",
       icon: <SettingOutlined />,
       label: "系统设置",
     },

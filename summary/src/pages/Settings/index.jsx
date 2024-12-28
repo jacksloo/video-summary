@@ -1,178 +1,304 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Form,
-  Switch,
+  Input,
   Button,
-  Divider,
   Select,
-  InputNumber,
+  Switch,
   message,
-  Anchor,
+  Radio,
+  InputNumber,
+  Divider,
   Space,
-  Row,
-  Col,
+  Tooltip,
+  Menu,
+  Layout,
 } from "antd";
-import "./index.css";
+import {
+  QuestionCircleOutlined,
+  BgColorsOutlined,
+  AudioOutlined,
+  FileTextOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
+import request from "../../utils/request";
+import styles from "./index.module.css";
+
+const { Option } = Select;
+const { Sider, Content } = Layout;
 
 const Settings = () => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const [selectedKey, setSelectedKey] = useState("theme");
+
+  // 加载用户设置
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const response = await request.get("/api/settings");
+        form.setFieldsValue(response.data);
+      } catch (error) {
+        message.error(
+          "加载设置失败：" + (error.response?.data?.detail || error.message)
+        );
+      }
+    };
+    loadSettings();
+  }, [form]);
 
   const onFinish = async (values) => {
     try {
-      setLoading(true);
-      console.log("系统设置:", values);
+      await request.post("/api/settings", values);
       message.success("设置保存成功");
+      // 如果主题发生变化，立即应用
+      if (values.theme?.mode !== form.getFieldValue(["theme", "mode"])) {
+        applyTheme(values.theme.mode);
+      }
     } catch (error) {
       message.error(
-        "保存失败：" + (error.response?.data?.detail || "未知错误")
+        "保存设置失败：" + (error.response?.data?.detail || error.message)
       );
-    } finally {
-      setLoading(false);
     }
   };
 
-  const settingSections = [
+  // 应用主题
+  const applyTheme = (mode) => {
+    document.body.className = mode === "dark" ? "dark-theme" : "light-theme";
+  };
+
+  const menuItems = [
     {
-      key: "basic",
-      title: "基础设置",
-      items: [
-        {
-          name: "darkMode",
-          label: "深色模式",
-          component: <Switch />,
-          valuePropName: "checked",
-        },
-        {
-          name: "language",
-          label: "语言",
-          component: (
-            <Select>
-              <Select.Option value="zh_CN">简体中文</Select.Option>
-              <Select.Option value="en_US">English</Select.Option>
-            </Select>
-          ),
-        },
-      ],
+      key: "theme",
+      icon: <BgColorsOutlined />,
+      label: "主题设置",
     },
     {
-      key: "video",
-      title: "视频设置",
-      items: [
-        {
-          name: "videoQuality",
-          label: "默认视频质量",
-          component: (
-            <Select>
-              <Select.Option value="1080p">1080p</Select.Option>
-              <Select.Option value="720p">720p</Select.Option>
-              <Select.Option value="480p">480p</Select.Option>
-            </Select>
-          ),
-        },
-        {
-          name: "aspectRatio",
-          label: "默认画面比例",
-          tooltip: "设置视频的默认显示比例",
-          component: (
-            <Select>
-              <Select.Option value="auto">自动</Select.Option>
-              <Select.Option value="16:9">16:9 宽屏</Select.Option>
-              <Select.Option value="4:3">4:3 标准</Select.Option>
-              <Select.Option value="1:1">1:1 正方形</Select.Option>
-              <Select.Option value="9:16">9:16 竖屏</Select.Option>
-              <Select.Option value="custom">自定义</Select.Option>
-            </Select>
-          ),
-        },
-        {
-          name: "maxConcurrent",
-          label: "最大并发处理数",
-          tooltip: "同时处理的最大视频数量",
-          component: <InputNumber min={1} max={5} />,
-        },
-        {
-          name: "autoSave",
-          label: "自动保存",
-          tooltip: "自动保存处理结果",
-          component: <Switch />,
-          valuePropName: "checked",
-        },
-      ],
+      key: "transcription",
+      icon: <AudioOutlined />,
+      label: "转录设置",
     },
     {
-      key: "notification",
-      title: "通知设置",
-      items: [
-        {
-          name: "notifications",
-          label: "启用通知",
-          component: <Switch />,
-          valuePropName: "checked",
-        },
-      ],
+      key: "summary",
+      icon: <FileTextOutlined />,
+      label: "摘要设置",
+    },
+    {
+      key: "system",
+      icon: <SettingOutlined />,
+      label: "系统设置",
     },
   ];
 
+  // 渲染设置内容
+  const renderSettingContent = () => {
+    switch (selectedKey) {
+      case "theme":
+        return (
+          <>
+            <h3>主题设置</h3>
+            <Form.Item name={["theme", "mode"]} label="主题模式">
+              <Radio.Group>
+                <Radio.Button value="light">浅色主题</Radio.Button>
+                <Radio.Button value="dark">深色主题</Radio.Button>
+                <Radio.Button value="system">跟随系统</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item name={["theme", "primaryColor"]} label="主题色">
+              <Radio.Group>
+                <Radio.Button value="#1890ff">默认蓝</Radio.Button>
+                <Radio.Button value="#52c41a">清新绿</Radio.Button>
+                <Radio.Button value="#722ed1">典雅紫</Radio.Button>
+                <Radio.Button value="#f5222d">中国红</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item
+              name={["theme", "compactMode"]}
+              label="紧凑模式"
+              valuePropName="checked"
+            >
+              <Switch />
+            </Form.Item>
+          </>
+        );
+      case "transcription":
+        return (
+          <>
+            <h3>转录设置</h3>
+            <Form.Item
+              name={["transcription", "model"]}
+              label={
+                <Space>
+                  转录模型
+                  <Tooltip title="更大的模型准确度更高，但处理速度较慢">
+                    <QuestionCircleOutlined />
+                  </Tooltip>
+                </Space>
+              }
+            >
+              <Select>
+                <Option value="distil-large-v3">Whisper Large V3</Option>
+                <Option value="distil-medium">Whisper Medium</Option>
+                <Option value="distil-small">Whisper Small</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item name={["transcription", "language"]} label="默认语言">
+              <Select>
+                <Option value="zh">中文</Option>
+                <Option value="en">英文</Option>
+                <Option value="auto">自动检测</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              name={["transcription", "autoStart"]}
+              label="自动开始转录"
+              valuePropName="checked"
+            >
+              <Switch />
+            </Form.Item>
+
+            <Form.Item
+              name={["transcription", "chunkSize"]}
+              label="分段长度（秒）"
+              tooltip="视频转录时的分段长度，较短的分段可以更快得到结果"
+            >
+              <InputNumber min={10} max={60} />
+            </Form.Item>
+          </>
+        );
+      case "summary":
+        return (
+          <>
+            <h3>摘要设置</h3>
+            <Form.Item name={["summary", "model"]} label="摘要模型">
+              <Select>
+                <Option value="gpt-3.5-turbo">GPT-3.5</Option>
+                <Option value="gpt-4">GPT-4</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item name={["summary", "maxLength"]} label="最大长度">
+              <InputNumber min={100} max={2000} />
+            </Form.Item>
+
+            <Form.Item name={["summary", "style"]} label="摘要风格">
+              <Select>
+                <Option value="concise">简洁</Option>
+                <Option value="detailed">详细</Option>
+                <Option value="bullet">要点</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              name={["summary", "autoSummarize"]}
+              label="自动生成摘要"
+              valuePropName="checked"
+              tooltip="转录完成后自动生成摘要"
+            >
+              <Switch />
+            </Form.Item>
+          </>
+        );
+      case "system":
+        return (
+          <>
+            <h3>系统设置</h3>
+            <Form.Item
+              name={["system", "autoSave"]}
+              label="自动保存"
+              valuePropName="checked"
+            >
+              <Switch />
+            </Form.Item>
+
+            <Form.Item
+              name={["system", "saveInterval"]}
+              label="保存间隔（分钟）"
+            >
+              <InputNumber min={1} max={30} />
+            </Form.Item>
+
+            <Form.Item
+              name={["system", "notifications"]}
+              label="系统通知"
+              valuePropName="checked"
+              tooltip="启用桌面通知"
+            >
+              <Switch />
+            </Form.Item>
+
+            <Form.Item
+              name={["system", "defaultVideoPath"]}
+              label="默认视频目录"
+              tooltip="设置默认的视频文件目录"
+            >
+              <Input placeholder="请输入默认视频目录路径" />
+            </Form.Item>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="settings-layout">
-      <div className="settings-header">
-        <h2>系统设置</h2>
-        <Button type="primary" onClick={() => form.submit()} loading={loading}>
-          保存设置
-        </Button>
-      </div>
-      <Row gutter={24} className="settings-content">
-        <Col span={4}>
-          <Anchor
-            className="settings-anchor"
-            items={settingSections.map((section) => ({
-              key: section.key,
-              href: `#${section.key}`,
-              title: section.title,
-            }))}
+    <Card title="系统设置" className={styles.settingsCard}>
+      <Layout className={styles.settingsLayout}>
+        <Sider width={200} className={styles.settingsSider}>
+          <Menu
+            mode="inline"
+            selectedKeys={[selectedKey]}
+            items={menuItems}
+            onClick={({ key }) => setSelectedKey(key)}
+            style={{ height: "100%" }}
           />
-        </Col>
-        <Col span={20}>
+        </Sider>
+        <Content className={styles.settingsContent}>
           <Form
             form={form}
             layout="vertical"
             onFinish={onFinish}
             initialValues={{
-              darkMode: false,
-              language: "zh_CN",
-              videoQuality: "720p",
-              aspectRatio: "16:9",
-              maxConcurrent: 3,
-              autoSave: true,
-              notifications: true,
+              theme: {
+                mode: "light",
+                primaryColor: "#1890ff",
+                compactMode: false,
+              },
+              transcription: {
+                model: "distil-large-v3",
+                language: "zh",
+                autoStart: true,
+                chunkSize: 30,
+              },
+              summary: {
+                model: "gpt-3.5-turbo",
+                maxLength: 500,
+                style: "concise",
+                autoSummarize: true,
+              },
+              system: {
+                autoSave: true,
+                saveInterval: 5,
+                notifications: true,
+                defaultVideoPath: "",
+              },
             }}
           >
-            {settingSections.map((section) => (
-              <Card
-                key={section.key}
-                id={section.key}
-                title={section.title}
-                className="settings-section"
-              >
-                {section.items.map((item) => (
-                  <Form.Item
-                    key={item.name}
-                    name={item.name}
-                    label={item.label}
-                    tooltip={item.tooltip}
-                    valuePropName={item.valuePropName}
-                  >
-                    {item.component}
-                  </Form.Item>
-                ))}
-              </Card>
-            ))}
+            {renderSettingContent()}
+            <Divider />
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                保存设置
+              </Button>
+            </Form.Item>
           </Form>
-        </Col>
-      </Row>
-    </div>
+        </Content>
+      </Layout>
+    </Card>
   );
 };
 
